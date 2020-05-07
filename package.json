@@ -10,7 +10,10 @@
     "gh-pages": "^2.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-three-fiber": "4.1.0",
+    "react-spring": "8.0.19",
+    "three": "0.102.1"
   },
   "scripts": {
     "predeploy": "npm run build",
