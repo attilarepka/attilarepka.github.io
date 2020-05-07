@@ -1,9 +1,7 @@
-//import React from 'react';
-// import logo from './logo.svg'; // deprecate later
-import './App.css'; // remove unnecessary things later
+import './App.css';
 import { extend as applyThree, Canvas, useFrame, useThree } from 'react-three-fiber'
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
-import { apply as applySpring, useSpring, a, interpolate } from 'react-spring/three'
+import React, { useRef, useEffect, useMemo } from 'react'
+import { apply as applySpring, useSpring, a } from 'react-spring/three'
 import * as THREE from 'three/src/Three'
 
 // Import and register postprocessing classes as three-native-elements for both react-three-fiber & react-spring
@@ -14,7 +12,6 @@ import { GlitchPass } from './lib/GlitchPass'
 applySpring({ EffectComposer, RenderPass, GlitchPass })
 applyThree({ EffectComposer, RenderPass, GlitchPass })
 
-/** This component creates a fullscreen colored plane */
 const Background = ({ color }) => {
   const { viewport } = useThree()
   return (
@@ -25,7 +22,6 @@ const Background = ({ color }) => {
   )
 }
 
-/** This renders text via canvas and projects it as a sprite */
 const Text = ({ children, position, opacity, color = 'white', fontSize = 410 }) => {
   const {
     viewport: { width: viewportWidth, height: viewportHeight }
@@ -51,7 +47,6 @@ const Text = ({ children, position, opacity, color = 'white', fontSize = 410 }) 
   )
 }
 
-/** This component creates a glitch effect */
 const Effects = React.memo(({ factor }) => {
   const { gl, scene, camera, size } = useThree()
   const composer = useRef()
@@ -66,8 +61,7 @@ const Effects = React.memo(({ factor }) => {
   )
 })
 
-/** This component rotates a bunch of stars */
-const Stars = ({ position }) => {
+const Stars = () => {
   let group = useRef()
   let theta = 0
   useFrame(() => {
@@ -83,7 +77,7 @@ const Stars = ({ position }) => {
     return [geo, mat, coords]
   }, [])
   return (
-    <a.group ref={group} position={position}>
+    <a.group ref={group}>
       {coords.map(([p1, p2, p3], i) => (
         <mesh key={i} geometry={geo} material={mat} position={[p1, p2, p3]} />
       ))}
@@ -91,8 +85,7 @@ const Stars = ({ position }) => {
   )
 }
 
-/** This component maintains the scene */
-const Scene = ({ top, mouse }) => {
+const Scene = () => {
   return (
     <>
       <a.spotLight intensity={1.2} color="white"/>
@@ -107,12 +100,10 @@ const Scene = ({ top, mouse }) => {
 }
 
 const App = () => {
-  // This tiny spring right here controlls all(!) the animations, one for scroll, the other for mouse movement ...
-  const [{ top, mouse }] = useSpring(() => ({ top: 0, mouse: [0, 0] }))
   return (
     <>
       <Canvas className="canvas">
-        <Scene top={top} mouse={mouse} />
+        <Scene/>
       </Canvas>
     </>
   )
