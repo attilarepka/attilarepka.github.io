@@ -1,6 +1,6 @@
 import './App.css';
 import { extend as applyThree, Canvas, useFrame, useThree } from 'react-three-fiber'
-import React, { useRef, useEffect, useMemo } from 'react'
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { apply as applySpring, useSpring, a } from 'react-spring/three'
 import * as THREE from 'three/src/Three'
 
@@ -37,13 +37,26 @@ const Text = ({ children, position, opacity, color = 'white', fontSize = 410 }) 
     context.fillStyle = color
     context.fillText(children, 1024, 1024 - 410 / 2)
     return canvas
-  }, [])
+  }, [children, color, fontSize])
   return (
     <a.sprite scale={[scale, scale, 1]} position={position}>
       <a.spriteMaterial attach="material" transparent opacity={opacity}>
         <canvasTexture attach="map" image={canvas} premultiplyAlpha onUpdate={s => (s.needsUpdate = true)} />
       </a.spriteMaterial>
     </a.sprite>
+  )
+}
+
+const Image = ({ url, opacity, scale, ...props }) => {
+  const texture = useMemo(() => new THREE.TextureLoader().load(url), [url])
+
+  return (
+    <a.mesh {...props} scale={[scale,scale,1]}>
+      <planeBufferGeometry attach="geometry" args={[5, 5]} />
+      <a.meshLambertMaterial attach="material" transparent opacity={opacity}>
+        <primitive attach="map" object={texture} />
+      </a.meshLambertMaterial>
+    </a.mesh>
   )
 }
 
@@ -88,13 +101,18 @@ const Stars = () => {
 const Scene = () => {
   return (
     <>
-      <a.spotLight intensity={1.2} color="white"/>
-      <Effects factor={1}/>
-      <Background color={['#27282F', '#247BA0', '#70C1B3', '#f8f3f1']}/>
-      <Stars/>
+      <a.spotLight intensity={1.2} color="white" />
+      <Effects factor={0.5} />
+      <Background color={['#27282F', '#247BA0', '#70C1B3', '#f8f3f1']} />
+      <Stars />
       <Text fontSize={200}>
         attila repka
       </Text>
+      {/* TODO: CSS placement for the social-media */}
+      {/* TODO: Mobile viewport placement */}
+      {/* TODO: Resize viewport update */}
+      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/2111/2111425.svg"} position={[-0.5, 0, -1]} scale={0.1} opacity={1} />
+      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/1409/1409945.svg"} position={[0.5, 0, -1]} scale={0.1} opacity={1} />
     </>
   )
 }
@@ -103,7 +121,7 @@ const App = () => {
   return (
     <>
       <Canvas className="canvas">
-        <Scene/>
+        <Scene />
       </Canvas>
     </>
   )
