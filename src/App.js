@@ -101,9 +101,9 @@ const Stars = () => {
 const Scene = () => {
   return (
     <>
-      <a.spotLight intensity={1.2} color="white" />
-      <Effects factor={0.5} />
-      <Background color={['#27282F', '#247BA0', '#70C1B3', '#f8f3f1']} />
+      <a.spotLight intensity={1.2} color="white" position={[0,0,9000]} />
+      <Effects factor={1} />
+      <Background color={'#4f4541'} />
       <Stars />
       <Text fontSize={200}>
         attila repka
@@ -111,8 +111,8 @@ const Scene = () => {
       {/* TODO: CSS placement for the social-media */}
       {/* TODO: Mobile viewport placement */}
       {/* TODO: Resize viewport update */}
-      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/2111/2111425.svg"} position={[-0.5, 0, -1]} scale={0.1} opacity={1} />
-      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/1409/1409945.svg"} position={[0.5, 0, -1]} scale={0.1} opacity={1} />
+      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/2111/2111425.svg"} position={[-0.5, 0, 1]} scale={0.1} opacity={1} />
+      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/1409/1409945.svg"} position={[0.5, 0, 1]} scale={0.1} opacity={1} />
     </>
   )
 }
