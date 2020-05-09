@@ -43,10 +43,7 @@ body {
 }
 
 .social-media {
-  width: 100%;
-  position: fixed;
-  text-align: center;
-  bottom: 30px;
+  cursor: pointer;
 }
 
 .social-media-img {

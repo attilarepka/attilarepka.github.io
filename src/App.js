@@ -47,11 +47,12 @@ const Text = ({ children, position, opacity, color = 'white', fontSize = 410 }) 
   )
 }
 
-const Image = ({ url, opacity, scale, ...props }) => {
+const Image = ({ url, opacity, scale, redirect, ...props }) => {
   const texture = useMemo(() => new THREE.TextureLoader().load(url), [url])
+  const mesh = useRef()
 
   return (
-    <a.mesh {...props} scale={[scale,scale,1]}>
+    <a.mesh ref={mesh} {...props} scale={[scale, scale, 1]} onClick={() => window.location = redirect}>
       <planeBufferGeometry attach="geometry" args={[5, 5]} />
       <a.meshLambertMaterial attach="material" transparent opacity={opacity}>
         <primitive attach="map" object={texture} />
@@ -101,7 +102,7 @@ const Stars = () => {
 const Scene = () => {
   return (
     <>
-      <a.spotLight intensity={1.2} color="white" position={[0,0,9000]} />
+      <a.spotLight intensity={1.2} color="white" position={[0, 0, 9000]} />
       <Effects factor={1} />
       <Background color={'#4f4541'} />
       <Stars />
@@ -111,8 +112,8 @@ const Scene = () => {
       {/* TODO: CSS placement for the social-media */}
       {/* TODO: Mobile viewport placement */}
       {/* TODO: Resize viewport update */}
-      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/2111/2111425.svg"} position={[-0.5, 0, 1]} scale={0.1} opacity={1} />
-      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/1409/1409945.svg"} position={[0.5, 0, 1]} scale={0.1} opacity={1} />
+      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/2111/2111425.svg"} redirect={"https://github.com/attilarepka"} scale={0.1} opacity={1} position={[-0.5, 0, 1]} />
+      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/1409/1409945.svg"} redirect={"https://linkedin.com/in/attila-repka"} scale={0.1} opacity={1} position={[0.5, 0, 1]} />
     </>
   )
 }
@@ -120,7 +121,7 @@ const Scene = () => {
 const App = () => {
   return (
     <>
-      <Canvas className="canvas">
+      <Canvas>
         <Scene />
       </Canvas>
     </>
