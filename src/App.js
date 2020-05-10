@@ -106,7 +106,7 @@ const Scene = () => {
       <Effects factor={1} />
       <Background color={'#4f4541'} />
       <Stars />
-      <Text fontSize={200}>
+      <Text fontSize={200} opacity={1}>
         attila repka
       </Text>
       {/* TODO: CSS placement for the social-media */}
