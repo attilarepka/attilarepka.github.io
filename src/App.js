@@ -48,16 +48,26 @@ const Text = ({ children, position, opacity, color = 'white', fontSize = 410 }) 
 }
 
 const Image = ({ url, opacity, scale, redirect, ...props }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   const texture = useMemo(() => new THREE.TextureLoader().load(url), [url])
+  texture.crossOrigin = '';
+  texture.minFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+
   const mesh = useRef()
 
+  const springProps = useSpring({
+    scale: isHovered ? [0.2, 0.2, 1] : [0.1, 0.1, 1]
+  })
+
   return (
-    <a.mesh ref={mesh} {...props} scale={[scale, scale, 1]} onClick={() => window.location = redirect}>
+    <a.mesh ref={mesh} {...props} scale={springProps.scale} onClick={() => window.location = redirect} onPointerOver={() => setIsHovered(true)} onPointerOut={() => setIsHovered(false)}>
       <planeBufferGeometry attach="geometry" args={[5, 5]} />
       <a.meshLambertMaterial attach="material" transparent opacity={opacity}>
         <primitive attach="map" object={texture} />
       </a.meshLambertMaterial>
-    </a.mesh>
+    </a.mesh >
   )
 }
 
@@ -100,6 +110,7 @@ const Stars = () => {
 }
 
 const Scene = () => {
+
   return (
     <>
       <a.spotLight intensity={1.2} color="white" position={[0, 0, 9000]} />
@@ -109,9 +120,6 @@ const Scene = () => {
       <Text fontSize={200} opacity={1}>
         attila repka
       </Text>
-      {/* TODO: CSS placement for the social-media */}
-      {/* TODO: Mobile viewport placement */}
-      {/* TODO: Resize viewport update */}
       <Image className="social-media" url={"https://image.flaticon.com/icons/svg/2111/2111425.svg"} redirect={"https://github.com/attilarepka"} scale={0.1} opacity={1} position={[-0.5, 0, 1]} />
       <Image className="social-media" url={"https://image.flaticon.com/icons/svg/1409/1409945.svg"} redirect={"https://linkedin.com/in/attila-repka"} scale={0.1} opacity={1} position={[0.5, 0, 1]} />
     </>
@@ -119,6 +127,9 @@ const Scene = () => {
 }
 
 const App = () => {
+  useEffect(() => {
+    document.title = "Hello friend"
+  }, []);
   return (
     <>
       <Canvas>
