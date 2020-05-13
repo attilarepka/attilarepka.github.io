@@ -1,6 +1,6 @@
 import './App.css';
 import { extend as applyThree, Canvas, useFrame, useThree } from 'react-three-fiber'
-import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
+import React from 'react'
 import { apply as applySpring, useSpring, a } from 'react-spring/three'
 import * as THREE from 'three/src/Three'
 
@@ -27,7 +27,7 @@ const Text = ({ children, position, opacity, color = 'white', fontSize = 410 }) 
     viewport: { width: viewportWidth, height: viewportHeight }
   } = useThree()
   const scale = viewportWidth > viewportHeight ? viewportWidth : viewportHeight
-  const canvas = useMemo(() => {
+  const canvas = React.useMemo(() => {
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = 2048
     const context = canvas.getContext('2d')
@@ -47,15 +47,17 @@ const Text = ({ children, position, opacity, color = 'white', fontSize = 410 }) 
   )
 }
 
+// TODO: CSS -> cursor: pointer
+// TODO: re-render glitch on onHover with less factor and/or write some zoom in shader
 const Image = ({ url, opacity, scale, redirect, ...props }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isHovered, setIsHovered] = React.useState(false);
 
-  const texture = useMemo(() => new THREE.TextureLoader().load(url), [url])
+  const texture = React.useMemo(() => new THREE.TextureLoader().load(url), [url])
   texture.crossOrigin = '';
   texture.minFilter = THREE.LinearFilter;
   texture.generateMipmaps = false;
 
-  const mesh = useRef()
+  const mesh = React.useRef()
 
   const springProps = useSpring({
     scale: isHovered ? [0.2, 0.2, 1] : [0.1, 0.1, 1]
@@ -73,8 +75,8 @@ const Image = ({ url, opacity, scale, redirect, ...props }) => {
 
 const Effects = React.memo(({ factor }) => {
   const { gl, scene, camera, size } = useThree()
-  const composer = useRef()
-  useEffect(() => void composer.current.setSize(size.width, size.height), [size])
+  const composer = React.useRef()
+  React.useEffect(() => void composer.current.setSize(size.width, size.height), [size])
   // This takes over as the main render-loop (when 2nd arg is set to true)
   useFrame(() => composer.current.render(), 1)
   return (
@@ -86,7 +88,7 @@ const Effects = React.memo(({ factor }) => {
 })
 
 const Stars = () => {
-  let group = useRef()
+  let group = React.useRef()
   let theta = 0
   useFrame(() => {
     const r = 5 * Math.sin(THREE.Math.degToRad((theta += 0.01)))
@@ -94,7 +96,7 @@ const Stars = () => {
     group.current.rotation.set(r, r, r)
     group.current.scale.set(s, s, s)
   })
-  const [geo, mat, coords] = useMemo(() => {
+  const [geo, mat, coords] = React.useMemo(() => {
     const geo = new THREE.SphereBufferGeometry(1, 10, 10)
     const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color('peachpuff'), transparent: true })
     const coords = new Array(1000).fill().map(i => [Math.random() * 800 - 400, Math.random() * 800 - 400, Math.random() * 800 - 400])
@@ -120,14 +122,24 @@ const Scene = () => {
       <Text fontSize={200} opacity={1}>
         attila repka
       </Text>
-      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/2111/2111425.svg"} redirect={"https://github.com/attilarepka"} scale={0.1} opacity={1} position={[-0.5, 0, 1]} />
-      <Image className="social-media" url={"https://image.flaticon.com/icons/svg/1409/1409945.svg"} redirect={"https://linkedin.com/in/attila-repka"} scale={0.1} opacity={1} position={[0.5, 0, 1]} />
+      <Image
+        url={"https://image.flaticon.com/icons/svg/2111/2111425.svg"}
+        redirect={"https://github.com/attilarepka"}
+        scale={0.1}
+        opacity={1}
+        position={[-0.5, 0, 1]} />
+      <Image
+        url={"https://image.flaticon.com/icons/svg/1409/1409945.svg"}
+        redirect={"https://linkedin.com/in/attila-repka"}
+        scale={0.1}
+        opacity={1}
+        position={[0.5, 0, 1]} />
     </>
   )
 }
 
 const App = () => {
-  useEffect(() => {
+  React.useEffect(() => {
     document.title = "Hello friend"
   }, []);
   return (

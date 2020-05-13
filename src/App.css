@@ -35,17 +35,3 @@ body {
     sans-serif;
   color: black;
 }
-
-.canvas {
-  position: absolute;
-  top: 0;
-  pointer-events: none;
-}
-
-.social-media {
-  cursor: pointer;
-}
-
-.social-media-img {
-  width: 26px;
-}
