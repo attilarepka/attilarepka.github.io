@@ -1,6 +1,6 @@
 import './App.css';
 import { extend as applyThree, Canvas, useFrame, useThree } from 'react-three-fiber'
-import React from 'react'
+import React, { useMemo, useState, useRef, useEffect, memo } from 'react'
 import { apply as applySpring, useSpring, a } from 'react-spring/three'
 import * as THREE from 'three/src/Three'
 
@@ -27,7 +27,7 @@ const Text = ({ children, position, opacity, color = 'white', fontSize = 410 }) 
     viewport: { width: viewportWidth, height: viewportHeight }
   } = useThree()
   const scale = viewportWidth > viewportHeight ? viewportWidth : viewportHeight
-  const canvas = React.useMemo(() => {
+  const canvas = useMemo(() => {
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = 2048
     const context = canvas.getContext('2d')
@@ -50,14 +50,14 @@ const Text = ({ children, position, opacity, color = 'white', fontSize = 410 }) 
 // TODO: CSS -> cursor: pointer
 // TODO: re-render glitch on onHover with less factor and/or write some zoom in shader
 const Image = ({ url, opacity, scale, redirect, ...props }) => {
-  const [isHovered, setIsHovered] = React.useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const texture = React.useMemo(() => new THREE.TextureLoader().load(url), [url])
+  const texture = useMemo(() => new THREE.TextureLoader().load(url), [url])
   texture.crossOrigin = '';
   texture.minFilter = THREE.LinearFilter;
   texture.generateMipmaps = false;
 
-  const mesh = React.useRef()
+  const mesh = useRef()
 
   const springProps = useSpring({
     scale: isHovered ? [0.2, 0.2, 1] : [0.1, 0.1, 1]
@@ -73,12 +73,12 @@ const Image = ({ url, opacity, scale, redirect, ...props }) => {
   )
 }
 
-const Effects = React.memo(({ factor }) => {
+const Effects = memo(({ factor }) => {
   const { gl, scene, camera, size } = useThree()
-  const composer = React.useRef()
-  React.useEffect(() => void composer.current.setSize(size.width, size.height), [size])
+  const composer = useRef()
+  useEffect(() => void composer.current.setSize(size.width, size.height), [size])
   // This takes over as the main render-loop (when 2nd arg is set to true)
-  useFrame(() => composer.current.render(), 1)
+  useFrame(() => composer.current.render(), true)
   return (
     <effectComposer ref={composer} args={[gl]}>
       <renderPass attachArray="passes" args={[scene, camera]} />
@@ -88,7 +88,7 @@ const Effects = React.memo(({ factor }) => {
 })
 
 const Stars = () => {
-  let group = React.useRef()
+  let group = useRef()
   let theta = 0
   useFrame(() => {
     const r = 5 * Math.sin(THREE.Math.degToRad((theta += 0.01)))
@@ -96,7 +96,7 @@ const Stars = () => {
     group.current.rotation.set(r, r, r)
     group.current.scale.set(s, s, s)
   })
-  const [geo, mat, coords] = React.useMemo(() => {
+  const [geo, mat, coords] = useMemo(() => {
     const geo = new THREE.SphereBufferGeometry(1, 10, 10)
     const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color('peachpuff'), transparent: true })
     const coords = new Array(1000).fill().map(i => [Math.random() * 800 - 400, Math.random() * 800 - 400, Math.random() * 800 - 400])
@@ -139,7 +139,7 @@ const Scene = () => {
 }
 
 const App = () => {
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = "Hello friend"
   }, []);
   return (
