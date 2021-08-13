@@ -89,9 +89,7 @@ const Image = ({ url, opacity, scale, redirect, ...props }) => {
       onPointerOut={() => setIsHovered(false)}
     >
       <planeBufferGeometry attach="geometry" args={[5, 5]} />
-      <a.meshLambertMaterial attach="material" transparent opacity={opacity}>
-        <primitive attach="map" object={texture} />
-      </a.meshLambertMaterial>
+      <meshBasicMaterial attach="material" transparent map={texture} />
     </a.mesh>
   );
 };
@@ -103,8 +101,10 @@ const Effects = memo(({ factor }) => {
     () => void composer.current.setSize(size.width, size.height),
     [size]
   );
-  // This takes over as the main render-loop (when 2nd arg is set to true)
-  useFrame(() => composer.current.render(), true);
+  // https://docs.pmnd.rs/react-three-fiber/API/hooks#taking-over-the-render-loop
+  useFrame(({ gl, scene, camera }) => {
+    gl.render(scene, camera);
+  }, 1);
   return (
     <effectComposer ref={composer} args={[gl]}>
       <renderPass attachArray="passes" args={[scene, camera]} />
@@ -149,7 +149,6 @@ const Stars = () => {
 const Scene = () => {
   return (
     <>
-      <a.spotLight intensity={1.2} color="white" position={[0, 0, 9000]} />
       {/* <Effects factor={1} /> */}
       <Background color={"#4f4541"} />
       <Stars />
@@ -160,14 +159,12 @@ const Scene = () => {
         url={"https://image.flaticon.com/icons/svg/2111/2111425.svg"}
         redirect={"https://github.com/attilarepka"}
         scale={0.1}
-        opacity={1}
         position={[-0.5, 0, 1]}
       />
       <Image
         url={"https://image.flaticon.com/icons/svg/1409/1409945.svg"}
         redirect={"https://linkedin.com/in/attila-repka"}
         scale={0.1}
-        opacity={1}
         position={[0.5, 0, 1]}
       />
     </>
