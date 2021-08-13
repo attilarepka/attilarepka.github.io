@@ -5,17 +5,16 @@ import {
   useFrame,
   useThree,
 } from "@react-three/fiber";
+import { EffectComposer } from "@react-three/postprocessing";
 import React, { useMemo, useState, useRef, useEffect, memo } from "react";
-import { apply as applySpring, useSpring, a } from "@react-spring/three";
+import { useSpring, a } from "@react-spring/three";
 import * as THREE from "three/src/Three";
 
 // Import and register postprocessing classes as three-native-elements for both react-three-fiber & react-spring
 // They'll be available as native elements <effectComposer /> from then on ...
-import { EffectComposer } from "./lib/EffectComposer";
 import { RenderPass } from "./lib/RenderPass";
 import { GlitchPass } from "./lib/GlitchPass";
 
-// applySpring({ EffectComposer, RenderPass, GlitchPass });
 applyThree({ EffectComposer, RenderPass, GlitchPass });
 
 const Background = ({ color }) => {
