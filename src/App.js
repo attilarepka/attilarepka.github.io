@@ -4,9 +4,17 @@ import {
   Canvas,
   useFrame,
   useThree,
+  useLoader,
 } from "@react-three/fiber";
 import { EffectComposer } from "@react-three/postprocessing";
-import React, { useMemo, useState, useRef, useEffect, memo } from "react";
+import React, {
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+  memo,
+  Suspense,
+} from "react";
 import { useSpring, a } from "@react-spring/three";
 import * as THREE from "three/src/Three";
 
@@ -15,17 +23,10 @@ import * as THREE from "three/src/Three";
 import { RenderPass } from "./lib/RenderPass";
 import { GlitchPass } from "./lib/GlitchPass";
 
-applyThree({ EffectComposer, RenderPass, GlitchPass });
+import github from "./assets/GitHub-Mark-120px-plus.png";
+import linkedin from "./assets/LI-In-Bug.png";
 
-const Background = ({ color }) => {
-  const { viewport } = useThree();
-  return (
-    <mesh scale={[viewport.width, viewport.height, 1]}>
-      <planeGeometry attach="geometry" args={[1, 1]} />
-      <a.meshBasicMaterial attach="material" color={color} depthTest={false} />
-    </mesh>
-  );
-};
+applyThree({ EffectComposer, RenderPass, GlitchPass });
 
 const Text = ({
   children,
@@ -65,18 +66,19 @@ const Text = ({
 
 // TODO: CSS -> cursor: pointer
 // TODO: re-render glitch on onHover with less factor and/or write some zoom in shader
-const Image = ({ url, opacity, scale, redirect, ...props }) => {
+const Image = ({ img, opacity, scale, redirect, ...props }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const texture = useMemo(() => new THREE.TextureLoader().load(url), [url]);
-  texture.crossOrigin = "";
-  texture.minFilter = THREE.LinearFilter;
-  texture.generateMipmaps = false;
+  const texture = useLoader(THREE.TextureLoader, img);
 
   const mesh = useRef();
 
+  const imgScale = texture.image.height / texture.image.width;
+
   const springProps = useSpring({
-    scale: isHovered ? [0.2, 0.2, 1] : [0.1, 0.1, 1],
+    scale: isHovered
+      ? [imgScale * 0.2, imgScale * 0.2, 1]
+      : [imgScale * 0.1, imgScale * 0.1, 1],
   });
 
   return (
@@ -89,7 +91,12 @@ const Image = ({ url, opacity, scale, redirect, ...props }) => {
       onPointerOut={() => setIsHovered(false)}
     >
       <planeBufferGeometry attach="geometry" args={[5, 5]} />
-      <meshBasicMaterial attach="material" transparent map={texture} />
+      <meshBasicMaterial
+        attach="material"
+        map={texture}
+        transparent
+        toneMapped={false}
+      />
     </a.mesh>
   );
 };
@@ -150,23 +157,20 @@ const Scene = () => {
   return (
     <>
       {/* <Effects factor={1} /> */}
-      <Background color={"#4f4541"} />
-      <Stars />
-      <Text fontSize={200} opacity={1}>
-        attila repka
-      </Text>
       <Image
-        url={"https://image.flaticon.com/icons/svg/2111/2111425.svg"}
+        img={github}
         redirect={"https://github.com/attilarepka"}
-        scale={0.1}
         position={[-0.5, 0, 1]}
       />
       <Image
-        url={"https://image.flaticon.com/icons/svg/1409/1409945.svg"}
+        img={linkedin}
         redirect={"https://linkedin.com/in/attila-repka"}
-        scale={0.1}
         position={[0.5, 0, 1]}
       />
+      <Text fontSize={200} opacity={1}>
+        attila repka
+      </Text>
+      <Stars />
     </>
   );
 };
@@ -178,7 +182,9 @@ const App = () => {
   return (
     <>
       <Canvas>
-        <Scene />
+        <Suspense fallback={null}>
+          <Scene />
+        </Suspense>
       </Canvas>
     </>
   );
