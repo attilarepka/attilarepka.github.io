@@ -96,7 +96,7 @@ const Stars = () => {
   let group = useRef();
   let theta = 0;
   useFrame(() => {
-    const r = 5 * Math.sin(THREE.Math.degToRad((theta += 0.01)));
+    const r = 5 * Math.sin(THREE.Math.degToRad((theta += 0.02)));
     const s = Math.cos(THREE.Math.degToRad(theta * 2));
     group.current.rotation.set(r, r, r);
     group.current.scale.set(s, s, s);
@@ -107,7 +107,7 @@ const Stars = () => {
       color: new THREE.Color("peachpuff"),
       transparent: true,
     });
-    const coords = new Array(1000)
+    const coords = new Array(2000)
       .fill()
       .map((i) => [
         Math.random() * 800 - 400,
@@ -162,7 +162,7 @@ const App = () => {
   }, []);
   return (
     <>
-      <Canvas>
+      <Canvas linear flat>
         <Suspense fallback={null}>
           <Scene />
         </Suspense>
