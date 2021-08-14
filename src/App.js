@@ -135,6 +135,7 @@ const Scene = () => {
         alignItems="center"
         flexDir="row"
         wrap="no-wrap"
+        position={[0, -0.5, 0]}
       >
         <Box flexGrow={1} margin={0.2}>
           <Image img={github} redirect={"https://github.com/attilarepka"} />
@@ -146,7 +147,7 @@ const Scene = () => {
           />
         </Box>
       </Flex>
-      <Text fontSize={200} opacity={1}>
+      <Text fontSize={200} opacity={1} position={[0, 0, 0]}>
         attila repka
       </Text>
       <Stars />
