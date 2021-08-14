@@ -6,27 +6,18 @@ import {
   useThree,
   useLoader,
 } from "@react-three/fiber";
-import { EffectComposer } from "@react-three/postprocessing";
-import React, {
-  useMemo,
-  useState,
-  useRef,
-  useEffect,
-  memo,
-  Suspense,
-} from "react";
+import { EffectComposer, Glitch } from "@react-three/postprocessing";
+import { GlitchMode } from "postprocessing";
+import React, { useMemo, useState, useRef, useEffect, Suspense } from "react";
 import { useSpring, a } from "@react-spring/three";
 import * as THREE from "three/src/Three";
 
-// Import and register postprocessing classes as three-native-elements for both react-three-fiber & react-spring
-// They'll be available as native elements <effectComposer /> from then on ...
 import { RenderPass } from "./lib/RenderPass";
-import { GlitchPass } from "./lib/GlitchPass";
 
 import github from "./assets/GitHub-Mark-120px-plus.png";
 import linkedin from "./assets/LI-In-Bug.png";
 
-applyThree({ EffectComposer, RenderPass, GlitchPass });
+applyThree({ EffectComposer, RenderPass });
 
 const Text = ({
   children,
@@ -101,25 +92,6 @@ const Image = ({ img, opacity, scale, redirect, ...props }) => {
   );
 };
 
-const Effects = memo(({ factor }) => {
-  const { gl, scene, camera, size } = useThree();
-  const composer = useRef();
-  useEffect(
-    () => void composer.current.setSize(size.width, size.height),
-    [size]
-  );
-  // https://docs.pmnd.rs/react-three-fiber/API/hooks#taking-over-the-render-loop
-  useFrame(({ gl, scene, camera }) => {
-    gl.render(scene, camera);
-  }, 1);
-  return (
-    <effectComposer ref={composer} args={[gl]}>
-      <renderPass attachArray="passes" args={[scene, camera]} />
-      <a.glitchPass attachArray="passes" renderToScreen factor={factor} />
-    </effectComposer>
-  );
-});
-
 const Stars = () => {
   let group = useRef();
   let theta = 0;
@@ -156,7 +128,6 @@ const Stars = () => {
 const Scene = () => {
   return (
     <>
-      {/* <Effects factor={1} /> */}
       <Image
         img={github}
         redirect={"https://github.com/attilarepka"}
@@ -171,6 +142,16 @@ const Scene = () => {
         attila repka
       </Text>
       <Stars />
+      <EffectComposer>
+        <Glitch
+          delay={[1.5, 3.5]}
+          duration={[0.6, 1.0]}
+          strength={[0.3, 1.0]}
+          mode={GlitchMode.SPORADIC}
+          active
+          ratio={0.85}
+        />
+      </EffectComposer>
     </>
   );
 };
