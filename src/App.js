@@ -22,6 +22,7 @@ import linkedin from "./assets/LI-In-Bug.png";
 
 applyThree({ EffectComposer, RenderPass });
 
+// TODO: re-render glitch on onHover with less factor and/or write some zoom in shader
 const Text = ({
   children,
   position,
@@ -58,8 +59,6 @@ const Text = ({
   );
 };
 
-// TODO: CSS -> cursor: pointer
-// TODO: re-render glitch on onHover with less factor and/or write some zoom in shader
 const Image = ({ img, redirect }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -74,6 +73,10 @@ const Image = ({ img, redirect }) => {
       ? [imgScale * 0.2, imgScale * 0.2, 1]
       : [imgScale * 0.1, imgScale * 0.1, 1],
   });
+
+  useEffect(() => {
+    document.body.style.cursor = isHovered ? "pointer" : "auto";
+  }, [isHovered]);
 
   return (
     <a.mesh
