@@ -7,6 +7,7 @@ import {
   useLoader,
 } from "@react-three/fiber";
 import { EffectComposer, Glitch } from "@react-three/postprocessing";
+import { Flex, Box } from "@react-three/flex";
 import { GlitchMode } from "postprocessing";
 import React, { useMemo, useState, useRef, useEffect, Suspense } from "react";
 import { useSpring, a } from "@react-spring/three";
@@ -24,7 +25,7 @@ const Text = ({
   position,
   opacity,
   color = "white",
-  fontSize = 410,
+  fontSize = 420,
 }) => {
   const {
     viewport: { width: viewportWidth, height: viewportHeight },
@@ -57,7 +58,7 @@ const Text = ({
 
 // TODO: CSS -> cursor: pointer
 // TODO: re-render glitch on onHover with less factor and/or write some zoom in shader
-const Image = ({ img, opacity, scale, redirect, ...props }) => {
+const Image = ({ img, redirect }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const texture = useLoader(THREE.TextureLoader, img);
@@ -75,13 +76,12 @@ const Image = ({ img, opacity, scale, redirect, ...props }) => {
   return (
     <a.mesh
       ref={mesh}
-      {...props}
       scale={springProps.scale}
       onClick={() => (window.location = redirect)}
       onPointerOver={() => setIsHovered(true)}
       onPointerOut={() => setIsHovered(false)}
     >
-      <planeBufferGeometry attach="geometry" args={[5, 5]} />
+      <planeBufferGeometry attach="geometry" args={[7, 7]} />
       <meshBasicMaterial
         attach="material"
         map={texture}
@@ -128,16 +128,24 @@ const Stars = () => {
 const Scene = () => {
   return (
     <>
-      <Image
-        img={github}
-        redirect={"https://github.com/attilarepka"}
-        position={[-0.5, 0, 1]}
-      />
-      <Image
-        img={linkedin}
-        redirect={"https://linkedin.com/in/attila-repka"}
-        position={[0.5, 0, 1]}
-      />
+      <Flex
+        width="100%"
+        height="100%"
+        justifyContent="center"
+        alignItems="center"
+        flexDir="row"
+        wrap="no-wrap"
+      >
+        <Box flexGrow={1} margin={0.2}>
+          <Image img={github} redirect={"https://github.com/attilarepka"} />
+        </Box>
+        <Box flexGrow={1} margin={0.2}>
+          <Image
+            img={linkedin}
+            redirect={"https://linkedin.com/in/attila-repka"}
+          />
+        </Box>
+      </Flex>
       <Text fontSize={200} opacity={1}>
         attila repka
       </Text>
@@ -162,7 +170,7 @@ const App = () => {
   }, []);
   return (
     <>
-      <Canvas linear flat>
+      <Canvas linear flat camera={{ position: [0, 0, 5] }}>
         <Suspense fallback={null}>
           <Scene />
         </Suspense>
