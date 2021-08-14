@@ -6,9 +6,11 @@ import {
   useThree,
   useLoader,
 } from "@react-three/fiber";
-import { EffectComposer, Glitch } from "@react-three/postprocessing";
+import { EffectComposer, Glitch, Bloom } from "@react-three/postprocessing";
 import { Flex, Box } from "@react-three/flex";
+
 import { GlitchMode } from "postprocessing";
+
 import React, { useMemo, useState, useRef, useEffect, Suspense } from "react";
 import { useSpring, a } from "@react-spring/three";
 import * as THREE from "three/src/Three";
@@ -147,11 +149,12 @@ const Scene = () => {
           />
         </Box>
       </Flex>
-      <Text fontSize={200} opacity={1} position={[0, 0, 0]}>
+      <Text fontSize={200} opacity={0.5} position={[0, 0, 0]}>
         attila repka
       </Text>
       <Stars />
       <EffectComposer>
+        <Bloom luminanceThreshold={0.2} />
         <Glitch
           delay={[1.5, 3.5]}
           duration={[0.6, 1.0]}
