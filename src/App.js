@@ -5,12 +5,7 @@ import {
   useFrame,
   useLoader,
 } from "@react-three/fiber";
-import {
-  EffectComposer,
-  Glitch,
-  Bloom,
-  DepthOfField,
-} from "@react-three/postprocessing";
+import { EffectComposer, Glitch, Bloom } from "@react-three/postprocessing";
 import { Flex, Box } from "@react-three/flex";
 import { Text } from "@react-three/drei";
 
@@ -105,12 +100,6 @@ const DepthText = () => {
     opacity: hovered ? 1.0 : 0.5,
   });
 
-  // NOTE: Currently useFrame cannot be used with DepthOfField component, sadly
-  const ref = useRef();
-  useFrame(() => {
-    ref.current.bokehScale = hovered ? 5.0 : 0.0;
-  }, []);
-
   return (
     <>
       <Text
@@ -133,15 +122,6 @@ const DepthText = () => {
           depthWrite={false}
         />
         attila repka
-        <EffectComposer>
-          <DepthOfField
-            ref={ref}
-            focusDistance={0}
-            focalLength={0}
-            bokehScale={5}
-            height={480}
-          />
-        </EffectComposer>
       </Text>
     </>
   );
