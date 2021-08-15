@@ -3,11 +3,16 @@ import {
   extend as applyThree,
   Canvas,
   useFrame,
-  useThree,
   useLoader,
 } from "@react-three/fiber";
-import { EffectComposer, Glitch, Bloom } from "@react-three/postprocessing";
+import {
+  EffectComposer,
+  Glitch,
+  Bloom,
+  DepthOfField,
+} from "@react-three/postprocessing";
 import { Flex, Box } from "@react-three/flex";
+import { Text } from "@react-three/drei";
 
 import { GlitchMode } from "postprocessing";
 
@@ -21,43 +26,6 @@ import github from "./assets/GitHub-Mark-120px-plus.png";
 import linkedin from "./assets/LI-In-Bug.png";
 
 applyThree({ EffectComposer, RenderPass });
-
-// TODO: re-render glitch on onHover with less factor and/or write some zoom in shader
-const Text = ({
-  children,
-  position,
-  opacity,
-  color = "white",
-  fontSize = 420,
-}) => {
-  const {
-    viewport: { width: viewportWidth, height: viewportHeight },
-  } = useThree();
-  const scale = viewportWidth > viewportHeight ? viewportWidth : viewportHeight;
-  const canvas = useMemo(() => {
-    const canvas = document.createElement("canvas");
-    canvas.width = canvas.height = 2048;
-    const context = canvas.getContext("2d");
-    context.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif`;
-    context.textAlign = "center";
-    context.textBaseline = "middle";
-    context.fillStyle = color;
-    context.fillText(children, 1024, 1024 - 410 / 2);
-    return canvas;
-  }, [children, color, fontSize]);
-  return (
-    <a.sprite scale={[scale, scale, 1]} position={position}>
-      <a.spriteMaterial attach="material" transparent opacity={opacity}>
-        <canvasTexture
-          attach="map"
-          image={canvas}
-          premultiplyAlpha
-          onUpdate={(s) => (s.needsUpdate = true)}
-        />
-      </a.spriteMaterial>
-    </a.sprite>
-  );
-};
 
 const Image = ({ img, redirect }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -130,6 +98,55 @@ const Stars = () => {
   );
 };
 
+const DepthText = () => {
+  const [hovered, setHovered] = useState(false);
+
+  const textSpring = useSpring({
+    opacity: hovered ? 1.0 : 0.5,
+  });
+
+  // NOTE: Currently useFrame cannot be used with DepthOfField component, sadly
+  const ref = useRef();
+  useFrame(() => {
+    ref.current.bokehScale = hovered ? 5.0 : 0.0;
+  }, []);
+
+  return (
+    <>
+      <Text
+        anchorY="95%"
+        color="white"
+        fontSize={1}
+        fillOpacity={0.5}
+        anchorX="center"
+        onPointerOver={() => {
+          setHovered(true);
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+        }}
+      >
+        <a.meshBasicMaterial
+          attach="material"
+          color={"white"}
+          opacity={textSpring.opacity}
+          depthWrite={false}
+        />
+        attila repka
+        <EffectComposer>
+          <DepthOfField
+            ref={ref}
+            focusDistance={0}
+            focalLength={0}
+            bokehScale={5}
+            height={480}
+          />
+        </EffectComposer>
+      </Text>
+    </>
+  );
+};
+
 const Scene = () => {
   return (
     <>
@@ -152,9 +169,7 @@ const Scene = () => {
           />
         </Box>
       </Flex>
-      <Text fontSize={200} opacity={0.5} position={[0, 0, 0]}>
-        attila repka
-      </Text>
+      <DepthText />
       <Stars />
       <EffectComposer>
         <Bloom luminanceThreshold={0.2} />
