@@ -29,12 +29,8 @@ const Image = ({ img, redirect }) => {
 
   const mesh = useRef();
 
-  const imgScale = texture.image.height / texture.image.width;
-
   const springProps = useSpring({
-    scale: isHovered
-      ? [imgScale * 0.2, imgScale * 0.2, 1]
-      : [imgScale * 0.1, imgScale * 0.1, 1],
+    scale: isHovered ? [0.2, 0.2, 1] : [0.1, 0.1, 1],
   });
 
   useEffect(() => {

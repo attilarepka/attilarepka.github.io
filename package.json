@@ -10,7 +10,7 @@
     "@react-three/fiber": "7.0.6",
     "@react-three/postprocessing": "2.0.5",
     "@react-three/flex": "0.6.1",
-    "@react-three/drei": "7.4.0",
+    "@react-three/drei": "7.5.0",
     "@react-spring/three": "9.2.4",
     "gh-pages": "^3.2.3",
     "react": "^17.0.2",
