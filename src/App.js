@@ -5,7 +5,12 @@ import {
   useFrame,
   useLoader,
 } from "@react-three/fiber";
-import { EffectComposer, Glitch, Bloom } from "@react-three/postprocessing";
+import {
+  EffectComposer,
+  Glitch,
+  Bloom,
+  DepthOfField,
+} from "@react-three/postprocessing";
 import { Flex, Box } from "@react-three/flex";
 import { Text } from "@react-three/drei";
 
@@ -124,6 +129,11 @@ const DepthText = () => {
 };
 
 const Scene = () => {
+  // const ref = useRef();
+  // useFrame((state) => {
+  //   ref.current.bokehScale = (Math.random() * (5.0 - 0.0) + 0.0).toFixed(4);
+  // }, []);
+
   return (
     <>
       <Flex
@@ -156,6 +166,13 @@ const Scene = () => {
           mode={GlitchMode.SPORADIC}
           active
           ratio={0.85}
+        />
+        <DepthOfField
+          // ref={ref}
+          focusDistance={0}
+          focalLength={0}
+          height={480}
+          bokehScale={0}
         />
       </EffectComposer>
     </>
