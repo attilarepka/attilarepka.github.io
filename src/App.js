@@ -129,10 +129,14 @@ const DepthText = () => {
 };
 
 const Scene = () => {
-  // const ref = useRef();
-  // useFrame((state) => {
-  //   ref.current.bokehScale = (Math.random() * (5.0 - 0.0) + 0.0).toFixed(4);
-  // }, []);
+  const ref = useRef();
+
+  useFrame(({ mouse }) => {
+    ref.current.bokehScale = Math.max(
+      Math.min(Math.abs(mouse.x) * 10, Math.abs(mouse.y) * 10),
+      0
+    );
+  }, []);
 
   return (
     <>
@@ -168,7 +172,7 @@ const Scene = () => {
           ratio={0.85}
         />
         <DepthOfField
-          // ref={ref}
+          ref={ref}
           focusDistance={0}
           focalLength={0}
           height={480}
