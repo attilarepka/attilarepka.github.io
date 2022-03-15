@@ -14,8 +14,6 @@ import {
 import { Flex, Box } from "@react-three/flex";
 import { Text } from "@react-three/drei";
 
-import { GlitchMode } from "postprocessing";
-
 import React, { useMemo, useState, useRef, useEffect, Suspense } from "react";
 import { useSpring, a } from "@react-spring/three";
 import * as THREE from "three/src/Three";
@@ -167,7 +165,6 @@ const Scene = () => {
           delay={[1.5, 3.5]}
           duration={[0.6, 1.0]}
           strength={[0.3, 1.0]}
-          mode={GlitchMode.SPORADIC}
           active
           ratio={0.85}
         />

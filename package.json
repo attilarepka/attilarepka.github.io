@@ -4,19 +4,19 @@
   "private": true,
   "homepage": "https://repka.hu/",
   "dependencies": {
-    "@react-spring/three": "9.4.2",
-    "@react-three/drei": "8.4.0",
-    "@react-three/fiber": "7.0.24",
+    "@react-spring/three": "9.4.4",
+    "@react-three/drei": "8.16.5",
+    "@react-three/fiber": "7.0.26",
     "@react-three/flex": "0.7.0",
-    "@react-three/postprocessing": "2.1.2",
-    "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^12.1.2",
+    "@react-three/postprocessing": "2.2.4",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "gh-pages": "^3.2.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
-    "three": "0.137.0"
+    "three": "0.138.3"
   },
   "scripts": {
     "predeploy": "npm run build",
@@ -42,9 +42,9 @@
     ]
   },
   "resolutions": {
-    "mini-css-extract-plugin": "2.4.5"
+    "mini-css-extract-plugin": "2.6.0"
   },
   "devDependencies": {
-    "mini-css-extract-plugin": "2.4.5"
+    "mini-css-extract-plugin": "2.6.0"
   }
 }
