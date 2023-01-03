@@ -44,7 +44,7 @@ const Image = ({ img, redirect }) => {
     <a.mesh
       ref={mesh}
       scale={springProps.scale}
-      onClick={() => (window.location = redirect)}
+      onClick={() => (window.open(redirect, "_blank").focus())}
       onPointerOver={() => setIsHovered(true)}
       onPointerOut={() => setIsHovered(false)}
     >
