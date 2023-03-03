@@ -21,9 +21,10 @@ jobs:
         run: npm install
       - name: Build page
         run: npm run build
+        run: mkdir ./public && cp -r ./build/* ./public/
       - name: Deploy to master
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./build
+          publish_dir: ./public
           publish_branch: master
