@@ -72,7 +72,7 @@ const Stars = () => {
   const [geo, mat, coords] = useMemo(() => {
     const geo = new THREE.SphereGeometry(1, 10, 10);
     const mat = new THREE.MeshBasicMaterial({
-      color: new THREE.Color("peachpuff"),
+      color: new THREE.Color("azure"),
       transparent: true,
     });
     const coords = new Array(2000)
