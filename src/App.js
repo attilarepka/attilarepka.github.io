@@ -47,8 +47,9 @@ const Image = ({ img, redirect }) => {
       onClick={() => (window.open(redirect, "_blank").focus())}
       onPointerOver={() => setIsHovered(true)}
       onPointerOut={() => setIsHovered(false)}
+      toneMapped={false}
     >
-      <planeBufferGeometry attach="geometry" args={[7, 7]} />
+      <planeGeometry attach="geometry" args={[7, 7]} />
       <meshBasicMaterial
         attach="material"
         map={texture}
@@ -63,20 +64,20 @@ const Stars = () => {
   let group = useRef();
   let theta = 0;
   useFrame(() => {
-    const r = 5 * Math.sin(THREE.Math.degToRad((theta += 0.02)));
-    const s = Math.cos(THREE.Math.degToRad(theta * 2));
+    const r = 5 * Math.sin(THREE.MathUtils.degToRad((theta += 0.02)));
+    const s = Math.cos(THREE.MathUtils.degToRad(theta * 2));
     group.current.rotation.set(r, r, r);
     group.current.scale.set(s, s, s);
   });
   const [geo, mat, coords] = useMemo(() => {
-    const geo = new THREE.SphereBufferGeometry(1, 10, 10);
+    const geo = new THREE.SphereGeometry(1, 10, 10);
     const mat = new THREE.MeshBasicMaterial({
       color: new THREE.Color("peachpuff"),
       transparent: true,
     });
     const coords = new Array(2000)
       .fill()
-      .map((i) => [
+      .map(() => [
         Math.random() * 800 - 400,
         Math.random() * 800 - 400,
         Math.random() * 800 - 400,
@@ -160,7 +161,9 @@ const Scene = () => {
       <DepthText />
       <Stars />
       <EffectComposer>
-        <Bloom luminanceThreshold={0.2} />
+        <Bloom
+          luminanceThreshold={0.5}
+        />
         <Glitch
           delay={[1.5, 3.5]}
           duration={[0.6, 1.0]}
