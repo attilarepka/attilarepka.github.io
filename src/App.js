@@ -16,7 +16,7 @@ import { Text } from "@react-three/drei";
 
 import React, { useMemo, useState, useRef, useEffect, Suspense } from "react";
 import { useSpring, a } from "@react-spring/three";
-import * as THREE from "three/src/Three";
+import * as THREE from "three";
 
 import { RenderPass } from "./lib/RenderPass";
 
